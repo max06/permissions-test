@@ -11,11 +11,11 @@ jobs:
     steps:
       - name: Enforce permission requirement
         uses: prince-chrismc/check-actor-permissions-action@v2
+        continue-on-error: true
         with:
           permission: write
 
       - name: Create Issue on Failed workflow
-        if: ${{ failure() }}
         uses: dacbd/create-issue-action@v1.2.1
         with:
           token: ${{ github.token }}
