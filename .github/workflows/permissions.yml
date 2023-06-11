@@ -1,0 +1,36 @@
+name: Testing Permissions
+
+on:
+  push:
+    branches: main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce permission requirement
+        uses: prince-chrismc/check-actor-permissions-action@v2
+        with:
+          permission: write
+
+      - name: Create Issue on Failed workflow
+        if: ${{ failure() }}
+        uses: dacbd/create-issue-action@v1.2.1
+        with:
+          token: ${{ github.token }}
+          title: Welcome!
+          body: |
+            Hello there!
+
+            It looks like you just created a new repository from our just-the-docs-template.
+            We're happy you decided to give it a go, and we hope we fulfill your needs.
+
+            Before you can deploy your page, some security related settings need to be set in your repository.
+
+            ### Context
+            [Failed Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            [Codebase](https://github.com/${{ github.repository }}/tree/${{ github.sha }})
+            Workflow name - `${{ github.workflow }}`
+            Job -           `${{ github.job }}`
+            status -        `${{ job.status }}`
